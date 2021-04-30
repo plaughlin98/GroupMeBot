@@ -3,17 +3,17 @@ from groupy.client import Client
 import groupme_credentials
 import sys, json, time
 
-
+#### AUTH ####
 token = groupme_credentials.ACCESS_TOKEN
-
 client = Client.from_token(token)
-
 all_groups = client.groups.list()
 
 # PROMPTS AND RESPONSES
 prompt_dict= {
     "hello": "howdy",
 }
+
+## BOT VARIABLES ##
 list_of_message_id_replied_to = []
 BOT_ID_NUM = "15295994"
 
@@ -40,14 +40,15 @@ def ReplyToMessage(message, group):
     user_id = message.data.get('user_id')
 
     for prompt, response in prompt_dict.items():
-        if prompt in message.text.lower() and message_id not in list_of_message_id_replied_to and user_id != BOT_ID_NUM: 
-            time.sleep(1)
-            group.post(text=response)
-            list_of_message_id_replied_to.append(message_id)
-        elif prompt not in message.text.lower() and message_id not in list_of_message_id_replied_to and user_id != BOT_ID_NUM:
-            time.sleep(1)
-            group.post(text="My idiot creator hasn't programmed a response for that yet.")
-            list_of_message_id_replied_to.append(message_id)
+        if message_id not in list_of_message_id_replied_to or user_id != BOT_ID_NUM:
+            if prompt in message.text.lower(): 
+                time.sleep(1)
+                group.post(text=response)
+                list_of_message_id_replied_to.append(message_id)
+            elif prompt not in message.text.lower():
+                time.sleep(1)
+                group.post(text="My idiot creator hasn't programmed a response for that yet.")
+                list_of_message_id_replied_to.append(message_id)
 
 
 if __name__ == "__main__":
